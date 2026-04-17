@@ -13,6 +13,7 @@ import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as LaunchRouteImport } from './routes/launch'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectIdRouteImport } from './routes/project.$id'
 
 const WalletRoute = WalletRouteImport.update({
   id: '/wallet',
@@ -34,18 +35,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectIdRoute = ProjectIdRouteImport.update({
+  id: '/project/$id',
+  path: '/project/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/launch': typeof LaunchRoute
   '/wallet': typeof WalletRoute
+  '/project/$id': typeof ProjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/launch': typeof LaunchRoute
   '/wallet': typeof WalletRoute
+  '/project/$id': typeof ProjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,14 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/launch': typeof LaunchRoute
   '/wallet': typeof WalletRoute
+  '/project/$id': typeof ProjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/launch' | '/wallet'
+  fullPaths: '/' | '/dashboard' | '/launch' | '/wallet' | '/project/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/launch' | '/wallet'
-  id: '__root__' | '/' | '/dashboard' | '/launch' | '/wallet'
+  to: '/' | '/dashboard' | '/launch' | '/wallet' | '/project/$id'
+  id: '__root__' | '/' | '/dashboard' | '/launch' | '/wallet' | '/project/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +76,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   LaunchRoute: typeof LaunchRoute
   WalletRoute: typeof WalletRoute
+  ProjectIdRoute: typeof ProjectIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/project/$id': {
+      id: '/project/$id'
+      path: '/project/$id'
+      fullPath: '/project/$id'
+      preLoaderRoute: typeof ProjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +124,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   LaunchRoute: LaunchRoute,
   WalletRoute: WalletRoute,
+  ProjectIdRoute: ProjectIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

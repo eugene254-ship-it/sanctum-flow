@@ -1,7 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
-import { Sparkles, TrendingUp } from "lucide-react";
+import { Sparkles, TrendingUp, Loader2 } from "lucide-react";
+import { createProject } from "@/lib/projectStore";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/launch")({
   head: () => ({
@@ -15,6 +17,7 @@ export const Route = createFileRoute("/launch")({
 
 function LaunchPage() {
   const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     name: "",
     token: "",
@@ -50,7 +53,27 @@ function LaunchPage() {
           {/* Form */}
           <form
             className="lg:col-span-3 glass-card rounded-2xl p-6 space-y-5"
-            onSubmit={(e) => { e.preventDefault(); navigate({ to: "/dashboard" }); }}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (submitting) return;
+              setSubmitting(true);
+              try {
+                const id = await createProject({
+                  name: form.name,
+                  token: form.token,
+                  description: form.description,
+                  category: form.category,
+                  supply: Number(form.supply) || 0,
+                  sanctum_score: initialScore,
+                });
+                toast.success(`${form.token || form.name} deployed to Sanctum!`);
+                navigate({ to: "/project/$id", params: { id } });
+              } catch (err: any) {
+                console.error(err);
+                toast.error(err?.message ?? "Failed to deploy project");
+                setSubmitting(false);
+              }
+            }}
           >
             <div>
               <label className="text-xs text-muted-foreground uppercase tracking-wider">Project Name</label>
@@ -97,10 +120,11 @@ function LaunchPage() {
             </div>
             <button
               type="submit"
-              disabled={completion < 60}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-primary-foreground font-semibold hover:opacity-90 transition glow-ring disabled:opacity-40 disabled:cursor-not-allowed"
+              disabled={completion < 60 || submitting}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-primary-foreground font-semibold hover:opacity-90 transition glow-ring disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Deploy to Sanctum →
+              {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+              {submitting ? "Deploying…" : "Deploy to Sanctum →"}
             </button>
           </form>
 
