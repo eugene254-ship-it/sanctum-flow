@@ -21,7 +21,8 @@ export function ProjectCard({ project }: { project: Project }) {
           {project.impact.map((i, idx) => <span key={idx}>{i}</span>)}
         </div>
         <Link
-          to="/dashboard"
+          to="/project/$id"
+          params={{ id: project.id }}
           className="text-xs font-semibold text-primary hover:text-secondary transition"
         >
           View Project →
