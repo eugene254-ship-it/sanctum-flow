@@ -1,7 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { ProjectCard } from "@/components/ProjectCard";
-import { featuredProjects } from "@/lib/mockData";
+import { fetchAllProjects } from "@/lib/projectStore";
 import { ArrowRight, Zap, TrendingUp, Globe } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -11,11 +11,22 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Discover tokenized creator projects with real-time Sanctum Scores and on-chain impact." },
     ],
   }),
+  loader: () => fetchAllProjects(),
+  errorComponent: ({ error }) => {
+    const router = useRouter();
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <p className="text-muted-foreground">Failed to load projects: {error.message}</p>
+        <button onClick={() => router.invalidate()} className="px-4 py-2 rounded-lg glass-card">Retry</button>
+      </div>
+    );
+  },
   component: ExplorePage,
 });
 
 function ExplorePage() {
-  const top = [...featuredProjects].sort((a, b) => b.sanctumScore - a.sanctumScore).slice(0, 3);
+  const projects = Route.useLoaderData();
+  const top = [...projects].sort((a, b) => b.sanctumScore - a.sanctumScore).slice(0, 3);
 
   return (
     <div className="min-h-screen">
@@ -54,7 +65,7 @@ function ExplorePage() {
       <section className="max-w-7xl mx-auto px-6 mb-20">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { icon: Zap, label: "Active Projects", value: "248" },
+            { icon: Zap, label: "Active Projects", value: String(projects.length) },
             { icon: TrendingUp, label: "Total Volume", value: "$12.4M" },
             { icon: Globe, label: "Impact Events", value: "98K" },
             { icon: ArrowRight, label: "Creators Onboarded", value: "1,830" },
@@ -78,7 +89,12 @@ function ExplorePage() {
         </div>
         <div className="glass-card rounded-2xl divide-y divide-border overflow-hidden">
           {top.map((p, i) => (
-            <div key={p.id} className="flex items-center gap-4 p-4 hover:bg-accent/30 transition">
+            <Link
+              to="/project/$id"
+              params={{ id: p.id }}
+              key={p.id}
+              className="flex items-center gap-4 p-4 hover:bg-accent/30 transition"
+            >
               <div className="w-8 text-center text-lg font-bold gradient-text">#{i + 1}</div>
               <div className="flex-1">
                 <div className="font-semibold">{p.creator}</div>
@@ -89,7 +105,7 @@ function ExplorePage() {
                 <div className="text-xl font-bold gradient-text">{p.sanctumScore}</div>
                 <div className="text-[10px] text-muted-foreground uppercase">Sanctum</div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -98,7 +114,7 @@ function ExplorePage() {
       <section className="max-w-7xl mx-auto px-6 pb-24">
         <h2 className="text-2xl font-bold mb-6">🔥 Featured Projects</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {featuredProjects.map((p) => <ProjectCard key={p.id} project={p} />)}
+          {projects.map((p) => <ProjectCard key={p.id} project={p} />)}
         </div>
       </section>
     </div>
