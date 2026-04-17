@@ -32,10 +32,10 @@ export async function fetchAllProjects(): Promise<StoredProject[]> {
     .order("created_at", { ascending: false });
   if (error) {
     console.error("Failed to load projects", error);
-    return featuredProjects;
+    return featuredProjects as StoredProject[];
   }
   const launched = (data ?? []).map(rowToProject);
-  return [...launched, ...featuredProjects];
+  return [...launched, ...(featuredProjects as StoredProject[])];
 }
 
 export async function fetchProjectById(id: string): Promise<StoredProject | null> {
