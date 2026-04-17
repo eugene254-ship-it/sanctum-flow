@@ -34,10 +34,14 @@ export const Route = createRootRoute({
       { name: "description", content: "Living creator economies powered by impact. Launch tokens, grow your Sanctum Score, and distribute value automatically." },
       { name: "author", content: "Atlas Sanctum" },
       { property: "og:title", content: "Atlas Sanctum — Living Creator Economies" },
-      { property: "og:description", content: "Launch tokenized creator projects with real-time impact tracking and automated value flow." },
+      { property: "og:description", content: "Living creator economies powered by impact. Launch tokens, grow your Sanctum Score, and distribute value automatically." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Atlas Sanctum — Living Creator Economies" },
+      { name: "twitter:description", content: "Living creator economies powered by impact. Launch tokens, grow your Sanctum Score, and distribute value automatically." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/616c156e-da8b-4627-a7b6-e0f5c4d23ca9/id-preview-0993802e--ddc0e2a8-0282-453d-a1f6-7e32b254ec71.lovable.app-1776438579026.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/616c156e-da8b-4627-a7b6-e0f5c4d23ca9/id-preview-0993802e--ddc0e2a8-0282-453d-a1f6-7e32b254ec71.lovable.app-1776438579026.png" },
     ],
     links: [
       {
