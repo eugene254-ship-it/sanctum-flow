@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { Navbar } from "@/components/Navbar";
 import { ProjectCard } from "@/components/ProjectCard";
-import { fetchAllProjects } from "@/lib/projectStore";
+import { fetchAllProjects, type StoredProject } from "@/lib/projectStore";
 import { ArrowRight, Zap, TrendingUp, Globe } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/")({
 });
 
 function ExplorePage() {
-  const projects = Route.useLoaderData();
+  const projects = Route.useLoaderData() as StoredProject[];
   const top = [...projects].sort((a, b) => b.sanctumScore - a.sanctumScore).slice(0, 3);
 
   return (
